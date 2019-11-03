@@ -9,6 +9,7 @@ var port = 8081;
 var app = express();
 
 //code here is from https://www.penta-code.com/scraping-youtube-comments-with-puppeteer/
+//I am hoping this part could help 1.navigate to the taobao site, 2.check if the page is loaded, 3.to scroll down the lazy loaded part and find the img.
 async function getElText(page, selector) {
 	return await page.evaluate((selector) => {
 		return document.querySelector(selector).innerText
@@ -23,14 +24,13 @@ async function getElText(page, selector) {
   const navigationPromise = page.waitForNavigation();
 
   await page.goto('https://item.taobao.com/item.htm?spm=a230r.1.14.265.365915d6JmYCed&id=551660449648&ns=1&abbucket=11#detail');
-  await page.waitForSelector('a.tb-tab-anchor');
+  await page.waitForSelector('a.tb-tab-anchor'); //here I am not sure
   await page.evaluate(_ => {
     window.scrollBy(0, window.innerHeight);
   });
   await page.waitFor(2000);
   await page.waitForSelector('#img');
   await navigationPromise;
-
   // await page.waitForSelector('.style-scope:nth-child(1) > #comment > #body > #main > #header > #header-author > #author-text > .style-scope')
   //
   //
@@ -55,6 +55,7 @@ async function getElText(page, selector) {
 
 
 //  code here is from https://stackoverflow.com/questions/52542149/how-can-i-download-images-on-a-page-using-puppeteer
+//  The code is for downloading the images. But I intend just to load the image so I didn't use it.
 
 // function download(uri, filename, callback) {
 //   request.head(uri, function(err, res, body) {
@@ -81,6 +82,7 @@ async function getElText(page, selector) {
 //  };
 
 
+// code here is from the workshop we had in the class. I do not know how it connects properly and reasonablly with the code above.
 app.get('/taobao', function (req, res) {
     var url = "https://item.taobao.com/item.htm?spm=a230r.1.14.265.365915d6JmYCed&id=551660449648&ns=1&abbucket=11#detail";
     request(url, function (error, response, html) {
@@ -103,7 +105,7 @@ app.get('/taobao', function (req, res) {
 });
 
 
-
+//this part is from https://www.penta-code.com/scraping-youtube-comments-with-puppeteer/
  await browser.close();
 })()
 
